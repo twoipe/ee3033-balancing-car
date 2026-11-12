@@ -48,3 +48,6 @@ See `EE3033_Mapping_v7.4/README.md` and `EE3033_Nav_v10/README.md` for full usag
 
 The assessment map and target position are never pre-programmed. No map file is included in this repo.
 During the autonomous run: no teleoperation, no manual goals, no map edits, no typed target coordinates.
+
+## Demonstration Video
+[Watch the robot demonstration video](https://github.com/twoipe/ee3033-balancing-car/raw/refs/heads/main/docs/navigation-video-demo.mp4)
