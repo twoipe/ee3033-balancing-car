@@ -1,6 +1,6 @@
 # EE3033 Nav v10: Reference (checks, TF, calibration, parameters)
 
-Companion to `README_Nav_v10_walkthrough.md`. 
+Companion to `README_Nav_v10_walkthrough.md`.
 
 Direct `ros2` commands need the environment in each new terminal:
 
@@ -108,7 +108,7 @@ Reasons not to deactivate or kill them:
 
 **Rule:** if `ros2 topic echo /cmd_vel` ever prints anything while A* is `IDLE`, run `python3 ee3033.py stop`, power-cycle the robot stack with `down`, and re-check.
 
-**What I would still need to see to be certain** (all printed by `preflight_checks.sh`, checks 6 to 8): `ros2 node info /velocity_smoother` (its input topic) and `ros2 topic info -v /goal_pose`. If the smoother's input turns out to be a topic that `behavior_server` or something else of ours publishes to, send me that output.
+**Still to confirm** (all printed by `preflight_checks.sh`, checks 6 to 8): `ros2 node info /velocity_smoother` (its input topic) and `ros2 topic info -v /goal_pose`. If the smoother's input turns out to be a topic that `behavior_server` or something else of ours publishes to, that is a further way the robot could move while A* is `IDLE`.
 
 ---
 
