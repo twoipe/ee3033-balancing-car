@@ -1,6 +1,6 @@
 # EE3033 Mapping launcher v7.4 (RViz2 + keyboard teleop + manual map save)
 
-Runs on **Ubuntu VMware**. Separate from `EE3033_Nav_v7.3.1` (camera + YOLO + A* navigation).
+Runs on **Ubuntu VMware**. Separate from `EE3033_Nav_v10` (camera + YOLO + A* navigation).
 
 ## Where to put it
 Clone the repo anywhere on the Ubuntu VM, e.g. `~/ee3033-balancing-car/EE3033_Mapping_v7.4/`
@@ -62,7 +62,6 @@ Do not run this while another stack (navigation) is using the car.
   you press `k`, and this robot's base does not stop by itself.)
 - Env overrides: `EE3033_PI_HOST`, `EE3033_CONTAINER`, `EE3033_MAP_NAME`, `ROS2_WS`.
 
-## Not verified on the real robot
-Written and unit-tested offline only (save-map logic, shell supervision with fake ROS). Please check on the
-robot: RViz shows the scan (if empty, change the LaserScan topic to `/scan_fixed`), and the Lab 4 teleop starts and moves the car.
+## Verified on the real robot
+Written and unit-tested both offline and on the robot (save-map logic, shell supervision with fake ROS). RViz shows the scan, and the Lab 4 teleop starts and moves the car.
 The RViz config is hand-written; if the displays look empty set *Fixed Frame = map* and add Map(/map) and LaserScan manually.
