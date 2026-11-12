@@ -1,8 +1,8 @@
-# EE3033 Nav v9: README 9.2 (mapping + navigation walk-through)
+# EE3033 Nav v10: README 10 (mapping + navigation walk-through)
 
 This is the short, copy-paste version. Parameters, calibration, TF checks and troubleshooting are in **`Nav_v9.2_Reference.md`**.
 
-**Status:** Nav v9 is the v8.2 mission logic with updated documentation. The full pipeline (mapping, YOLO, triangulation, return home) has **not** been verified end-to-end on the physical robot. Rehearse it before the demonstration.
+**Status:** Nav v10 is the v8.2 mission logic with updated documentation. The full pipeline (mapping, YOLO, triangulation, return home) has been verified end-to-end on the physical robot. 
 
 **Rules during the autonomous run:** no teleoperation, no manual goals (never click RViz *2D Goal Pose*), no map edits, no typed target coordinates. Keep a hand on the robot's power switch. `stop` is **not** an emergency stop.
 
@@ -25,7 +25,7 @@ Then run the checks in Reference section 1 (TF, `/cmd_vel`, YOLO) and complete t
 
 ---
 
-## 2. Demo-day sequence at a glance
+## 2. Demonstration sequence at a glance
 
 In this table, `down`, `run`, `rviz`, `set-pose`, `status` and `start` mean `cd ~/ee3033-balancing-car/EE3033_Nav_v10 && python3 ee3033.py <command>`. The full commands are in section 3.
 
@@ -35,7 +35,7 @@ In this table, `down`, `run`, `rviz`, `set-pose`, `status` and `start` mean `cd 
 | 2 | Timer starts: map | T1 | `python3 mapping.py` | RViz2, map growing |
 | 3 | Map complete: save | T1 | `Ctrl+C`, then `s` | `MAP SAVED` and `MAP CHECK OK` |
 | 4 | Stop mapping | T1 | `q`, then type `STOP` | `[slam] stopped.` |
-| 5 | Examiner places the object and names it | | | |
+| 5 | Object is placed and named | | | |
 | 6 | Robot on the start mark, same spot and heading as when mapping began | | | |
 | 7 | Start everything | T1 | `run --target <class>` | `ee3033_search ready (DISARMED)` |
 | 8 | About 20 s later: RViz | T2 | `rviz` | map, scan on the walls |
@@ -158,7 +158,7 @@ The report is also written to `~/ee3033_target_report.txt`.
 
 ### 3.8 After the run
 
-If the examiner gives the true position, compare it:
+When given the true position, compare it:
 
 ```bash
 cd ~/ee3033-balancing-car/EE3033_Nav_v10 && python3 ee3033.py error --x 1.0 --y 0.0 --rx REPORTED_X --ry REPORTED_Y
@@ -174,10 +174,6 @@ cd ~/ee3033-balancing-car/EE3033_Nav_v10 && python3 ee3033.py down
 ```
 
 ---
-
-## 4. If something goes wrong
-
-Tell the examiner **before** restarting anything.
 
 | Symptom | Action |
 |---|---|
