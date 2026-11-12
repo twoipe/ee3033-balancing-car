@@ -1,6 +1,6 @@
 # EE3033 Nav v10: README 10 (mapping + navigation walk-through)
 
-This is the short, copy-paste version. Parameters, calibration, TF checks and troubleshooting are in **`Nav_v9.2_Reference.md`**.
+This is the short, copy-paste version. Parameters, calibration, TF checks and troubleshooting are in **`Nav_v10_Reference.md`**.
 
 **Status:** Nav v10 is the v8.2 mission logic with updated documentation. The full pipeline (mapping, YOLO, triangulation, return home) has been verified end-to-end on the physical robot. 
 
