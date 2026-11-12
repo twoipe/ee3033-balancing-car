@@ -10,7 +10,7 @@ triangulation), reports its (x, y) in the map frame, and returns to the start.
 |---|---|
 | `EE3033_Mapping_v7.4/` | Mapping launcher: SLAM + RViz2 + keyboard teleop + map save (runs on the Ubuntu VM; not a ROS package) |
 | `EE3033_Nav_v10/` | Navigation launcher + `ee3033_search` ROS 2 package (mission node), Pi-side A*, YOLO perception, config, RViz |
-| `docs/` | Older v9.2 walkthrough and reference (checks, TF, calibration, parameters). v10 README is `EE3033_Nav_v10/README.md` |
+| `docs/` | v10 walkthrough and reference (checks, TF, calibration, parameters). v10 README is `EE3033_Nav_v10/README.md` |
 
 Clone anywhere on the VM (the READMEs assume `~/ee3033-balancing-car`). Generated maps are saved to
 `~/ee3033_maps/` on the VM.
