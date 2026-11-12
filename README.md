@@ -13,7 +13,7 @@ triangulation), reports its (x, y) in the map frame, and returns to the start.
 | `docs/` | Older v9.2 walkthrough and reference (checks, TF, calibration, parameters). v10 README is `EE3033_Nav_v10/README.md` |
 
 Clone anywhere on the VM (the READMEs assume `~/ee3033-balancing-car`). Generated maps are saved to
-`~/ee3033_maps/` on the VM and are deliberately **not** committed.
+`~/ee3033_maps/` on the VM.
 
 ## The three commands
 
@@ -44,7 +44,7 @@ Re-run `install` after any change to `ee3033_search/` or `ee3033_search/config/s
 
 See `EE3033_Mapping_v7.4/README.md` and `EE3033_Nav_v10/README.md` for full usage, calibration and troubleshooting.
 
-## Rules reminder
+## Additional notes
 
 The assessment map and target position are never pre-programmed. No map file is included in this repo.
 During the autonomous run: no teleoperation, no manual goals, no map edits, no typed target coordinates.
