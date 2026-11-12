@@ -1,8 +1,8 @@
-# EE3033 Navigation v10 — README 10
+# EE3033 Navigation v10
 
 ## 1. What changed from v8.2
 
-Nav v10 retains the v8.2/v9 mission, A* navigation, AMCL, YOLO, camera-only multi-view triangulation, automatic sideways viewpoint, and return-home behavior. **Changes in v10 (tooling only):** `ee3033.py rviz` now looks up the live YOLO annotated-image topic (`/yolo/dbg_image` vs `/yolo/debug_image` differs between yolo_ros versions) and feeds it to RViz instead of a hard-coded name; a new `ee3033.py image` command opens the annotated image in `rqt_image_view` (the same viewer used by the one-command startup) as a fallback when RViz image panels stay black in a VM; The YOLO launch now passes `detections_topic:= detections` so the debug node reads the raw detections (`with use_tracking:=False` the default `tracking` topic never publishes, which left `/yolo/debug_image` emoty). **No navigation algorithm or safety thresholds were changed.** The integrated system has been fully tested on the physical robot in this release.
+Nav v10 retains the v8.2/v9 mission, A* navigation, AMCL, YOLO, camera-only multi-view triangulation, automatic sideways viewpoint, and return-home behavior. **Changes in v10 (tooling only):** `ee3033.py rviz` now looks up the live YOLO annotated-image topic (`/yolo/dbg_image` vs `/yolo/debug_image` differs between yolo_ros versions) and feeds it to RViz instead of a hard-coded name; a new `ee3033.py image` command opens the annotated image in `rqt_image_view` (the same viewer used by the one-command startup) as a fallback when RViz image panels stay black in a VM; The YOLO launch now passes `detections_topic:=detections` so the debug node reads the raw detections (with `use_tracking:=False` the default `tracking` topic never publishes, which left `/yolo/debug_image` empty). **No navigation algorithm or safety thresholds were changed.** The integrated system has been fully tested on the physical robot in this release.
 
 The robot uses LiDAR for mapping, localization and obstacle avoidance, **not for measuring target range**. Camera bearings from distinct robot positions determine the target's map coordinates. The target must be a recognized YOLO class, and the method assumes one stationary object of that class.
 
@@ -52,7 +52,7 @@ cd ~/ee3033-balancing-car/EE3033_Nav_v10 && python3 ee3033.py down
 cd ~/ee3033-balancing-car/EE3033_Mapping_v7.4 && python3 mapping.py
 ```
 
-Use the mapping program's `Ctrl+C` menu, choose `s` and confirm `MAP SAVED` and the map check, then `q` and `STOP`. Mapping v7.4 is **not included** in this Nav v10 ZIP.
+Use the mapping program's `Ctrl+C` menu, choose `s` and confirm `MAP SAVED` and the map check, then `q` and `STOP`. Mapping v7.4 is in the sibling `EE3033_Mapping_v7.4/` folder.
 
 **One-time installation and offline checks (VM):**
 
@@ -207,4 +207,4 @@ cd ~/ee3033-balancing-car/EE3033_Nav_v10 && python3 ee3033.py error --x 1.0 --y 
 - `ee3033_search/ee3033_search/mission_logic.py`: coverage, viewpoint, confirmation and return-home states.
 - `pi/astar_realtime.py` and `config/astar.yaml`: Pi-side A* and motion control.
 
-The YOLO launch now passes `detections_topic:= detections` so the debug node reads the raw detections (`with use_tracking:=False` the default `tracking` topic never publishes, which left `/yolo/debug_image` emoty). Offline tests are supplied under `ee3033_search/tests/`; hardware, timing, camera mounting, corridor clearance and real-world localization must be checked on the actual robot. The v8.2 known limitations (including stale-pose checks and stale error reports) have **not** been repaired in this release.
+The YOLO launch now passes `detections_topic:=detections` so the debug node reads the raw detections (with `use_tracking:=False` the default `tracking` topic never publishes, which left `/yolo/debug_image` empty). Offline tests are supplied under `ee3033_search/tests/`; hardware, timing, camera mounting, corridor clearance and real-world localization must be checked on the actual robot. The v8.2 known limitations (including stale-pose checks and stale error reports) have **not** been repaired in this release.
