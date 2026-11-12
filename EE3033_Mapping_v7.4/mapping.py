@@ -6,7 +6,7 @@
     python3 mapping.py stop            stop SLAM + base + LiDAR on the Pi, incl. leftovers (only after saving the map!)
 
 This launcher does NOT start the camera, YOLO or navigation, and it never saves the map by itself:
-you decide when the map is good and save it manually. It is independent of EE3033_Nav_v7.3.
+you decide when the map is good and save it manually. It is independent of EE3033_Nav_v10.
 """
 import argparse
 import os
