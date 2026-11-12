@@ -1,6 +1,6 @@
-# EE3033 Nav v9.2: Reference (checks, TF, calibration, parameters)
+# EE3033 Nav v10: Reference (checks, TF, calibration, parameters)
 
-Companion to `README_Nav_v9.2_walkthrough.md`. Nothing here has been verified on the physical robot unless you verify it yourself; values marked "default" are starting points.
+Companion to `README_Nav_v10_walkthrough.md`. 
 
 Direct `ros2` commands need the environment in each new terminal:
 
@@ -22,7 +22,7 @@ cd ~/ee3033-balancing-car/EE3033_Nav_v10 && bash preflight_checks.sh 2>&1 | tee 
 
 `preflight_checks.sh` and `bearing_calibration.py` are already in `EE3033_Nav_v10/`. The script is read-only: it echoes topics, TF and parameters and commands nothing.
 
-### 1.1 What your first outputs already show
+### 1.1 What the first outputs already show
 
 | Observation | Reading |
 |---|---|
@@ -135,12 +135,10 @@ Place one clearly detectable object (a bottle works) at points measured **from t
 
 | Placement | X (m) | Y (m) |
 |---|---|---|
-| A | 1.5 | +0.40 |
-| B | 1.5 | 0.00 |
-| C | 1.5 | -0.40 |
-| D | 1.0 | +0.20 |
-
-Why not the README v9 example of 1.0 m forward and 0.40 m left? At FOV 48.3 deg that is a bearing of 21.8 deg, and the half-FOV is 24.15 deg: the box centre lands near pixel 34 and is likely **clipped by the image edge**, which biases the centre. Stay within about 15 deg.
+| A | 1.0 | +0.25 |
+| B | 1.0 | 0.00 |
+| C | 1.0 | -0.25 |
+| D | 0.7 | -0.15 |
 
 For each placement read the box-centre pixel (3 times, average):
 
@@ -151,7 +149,7 @@ source /opt/ros/humble/setup.bash && source "$HOME/ros2_ws/install/setup.bash" &
 The box centre is the `x` under `bbox: center:` (it may appear as `position: x:`). Ignore the `size` values. Then:
 
 ```bash
-cd ~/ee3033-balancing-car/EE3033_Nav_v10 && python3 bearing_calibration.py --obs 1.5,0.40,U_A 1.5,0.0,U_B 1.5,-0.40,U_C 1.0,0.20,U_D
+cd ~/ee3033-balancing-car/EE3033_Nav_v10 && python3 bearing_calibration.py --obs 1.0,0.25,U_A 1.0,0.0,U_B 1.0,-0.25,U_C 0.7,-0.15,U_D
 ```
 
 Replace `U_A` ... with your pixel values. Output gives `camera_horizontal_fov_deg` and `camera_yaw_offset_deg` and the fit error.
@@ -161,7 +159,6 @@ Replace `U_A` ... with your pixel values. Output gives `camera_horizontal_fov_de
 | RMS below 0.7 deg, yaw offset under 3 deg | Write both values into `search.yaml`. |
 | Yaw offset above 3 deg | Fix the camera TF yaw first (section 1.3), repeat. |
 | RMS above 1 deg | Re-measure from the camera, re-read pixels, check lighting. |
-| FOV far from 48.3 | Expected: 48.3 was calibrated for the old size-ratio method. Use the new value. |
 
 Edit and rebuild:
 
@@ -253,8 +250,8 @@ Verify the current setting: `grep -n "calibration_verified\|target_class\|camera
 |---|---|---|---|
 | `target_class` | `''` | Empty; set per run by `--target` | Never edit |
 | `calibration_verified` | `false` | Start gate | `true` only after trials |
-| `camera_horizontal_fov_deg` | 48.3 | Pixel to bearing | **Calibrate** (3.2) |
-| `camera_yaw_offset_deg` | 0.0 | Residual yaw added to the camera TF | **Calibrate** (3.2) |
+| `camera_horizontal_fov_deg` | 57.9 | Pixel to bearing | **Calibrate** (3.2) |
+| `camera_yaw_offset_deg` | -2.05 | Residual yaw added to the camera TF | **Calibrate** (3.2) |
 | `camera_frame` | `camera_link` | TF frame of the camera | Change only if the frame name differs |
 | `image_width`, `image_height` | 640, 480 | Pixel scale | Must match the camera |
 | `min_confidence` | 0.45 | Mission YOLO threshold (YOLO node itself uses 0.3) | Raise if false positives |
@@ -307,7 +304,7 @@ Hard-coded in `pi/astar_realtime.py` (not in the YAML): `scan_timeout` 1.0 s, `s
 
 ---
 
-## 5. Known limitations (not fixed in v9) and workarounds
+## 5. Known limitations and workarounds
 
 | Limitation | Workaround |
 |---|---|
@@ -342,22 +339,7 @@ While the mission runs, Terminal 1 prints `detection stats (last 5 s)` every 5 s
 
 ---
 
-## 7. Likely examiner questions
-
-| Question | Short answer |
-|---|---|
-| How do you map and localize? | SLAM Toolbox builds the map from the N10P LiDAR; `map_saver` writes the files; `map_server` and AMCL localize on the saved map; an initial pose is set at the start mark. |
-| How does the robot search? | Candidate sites on a lattice in mapped free space; the next site is the one with the most unseen area per distance; the camera field of view is ray-cast onto the map; 90 degree spins; sites already covered are skipped. |
-| How is the target located without LiDAR range or object size? | YOLO gives the box centre; the pinhole model gives a bearing; TF gives the camera pose at the image timestamp; rays from two separated positions are intersected and refined by least squares; inconsistent rays and positions on walls are rejected. |
-| Why move sideways? | One viewpoint gives only a direction. Translation of at least 0.20 m gives parallax; the move is perpendicular to the first ray. |
-| What if triangulation fails? | Try the opposite-side viewpoint, resume the search after a cooldown, and in the end return home without a report. |
-| Why is Nav2 running? | The lab bringup provides `map_server` and AMCL; Nav2's planner, controller and behavior nodes are idle. The custom A* node is the only commander of `/cmd_vel` in practice. |
-| How does it stay safe? | Live LiDAR stop at 0.20 m, slow from 0.45 m, back-off only if the rear is clear, goal timeout, no-progress and blocked watchdogs, A* silence watchdog in the mission node. |
-| What are the limits? | Section 5. |
-
----
-
-## 8. Quick reference
+## 7. Quick reference
 
 **ROS topics:** `/map`, `/scan` or `/scan_fixed`, `/tf`, `/tf_static`, `/yolo/detections`, `/astar/command` (JSON `goto`, `spin`, `cancel`), `/astar/status`, `/cmd_vel`, `/ee3033/target_map`, `/ee3033/target_report`, `/ee3033/mission_state`, `/ee3033/search_sites`, `/ee3033/coverage`.
 
