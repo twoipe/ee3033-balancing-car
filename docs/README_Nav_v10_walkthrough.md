@@ -1,8 +1,8 @@
-# EE3033 Nav v10: README 10 (mapping + navigation walk-through)
+# EE3033 Nav v10: walkthrough (mapping + navigation)
 
 This is the short, copy-paste version. Parameters, calibration, TF checks and troubleshooting are in **`Nav_v10_Reference.md`**.
 
-**Status:** Nav v10 is the v8.2 mission logic with updated documentation. The full pipeline (mapping, YOLO, triangulation, return home) has been verified end-to-end on the physical robot. 
+**Status:** Nav v10 is the v8.2 mission logic with updated documentation. The full pipeline (mapping, YOLO, triangulation, return home) has been verified end-to-end on the physical robot.
 
 **Rules during the autonomous run:** no teleoperation, no manual goals (never click RViz *2D Goal Pose*), no map edits, no typed target coordinates. Keep a hand on the robot's power switch. `stop` is **not** an emergency stop.
 
