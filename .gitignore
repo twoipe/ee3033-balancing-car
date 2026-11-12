@@ -1,0 +1,15 @@
+# ROS 2 / colcon build output
+build/
+install/
+log/
+# Python
+__pycache__/
+*.pyc
+# Backups, archives, run logs
+*.bak
+*.zip
+preflight_out.txt
+ee3033_target_report.txt
+# Saved maps (assessment map must not be committed; maps are saved to ~/ee3033_maps on the VM)
+ee3033_maps/
+*.pgm
