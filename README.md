@@ -99,7 +99,9 @@ Although target localization was unsuccessful, the robot autonomously returned t
 No target was confirmed.
 Mission time: 126.8 s.
 ```
-During navigation, the robot collided with a mapped obstacle and became stuck. The navigation system was unable to recover and return to the starting area. A possible contributing factor was the navigation clearance configuration, which used a hard obstacle-inflation radius (0.075m) smaller than the robot's physical half-width (0.0925) to allow narrow passages. 
+During navigation, the robot collided with a mapped obstacle and became stuck. The navigation system was unable to recover and return to the starting area. A possible contributing factor was the navigation clearance configuration, which used a hard obstacle-inflation radius of 0.075 m, smaller than the robot's physical half-width of 0.0925 m, to allow navigation through narrow passages approximately 0.22 m wide.
+
+Another possible contributing factor was the A* planner's tendency to favour lower-cost paths, which could lead to routes close to obstacles when the clearance penalties were insufficient. Although the planner included soft obstacle costs to discourage such routes, these did not guarantee adequate physical clearance.
 
 This failure highlights limitations in obstacle clearance and navigation recovery in confined environments. Further investigation is needed to determine whether the collision resulted from insufficient clearance, localization error or path-following behaviour.
 
