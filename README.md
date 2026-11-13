@@ -46,8 +46,68 @@ See `EE3033_Mapping_v7.4/README.md` and `EE3033_Nav_v10/README.md` for full usag
 
 ## Additional notes
 
-The assessment map and target position are never pre-programmed. No map file is included in this repo.
-During the autonomous run: no teleoperation, no manual goals, no map edits, no typed target coordinates.
+The assessment environment and target position were not known in advance or pre-programmed into the system. Mapping was performed on-site during the assessment, before the target object was placed in the environment.
 
-## Demonstration Video
+The repository includes maps generated during the actual assessment for documentation and reproducibility. These maps were recorded during the demonstration and were not supplied to the robot before the mapping stage. During autonomous operation, no manual teleoperation, navigation-goal selection, map modification or manual specification of target coordinates was performed.
+
+The recorded results include both successful and unsuccessful runs to document the system's capabilities and limitations.
+
+## Recorded demonstration
+
 [Watch the robot demonstration video](https://github.com/twoipe/ee3033-balancing-car/raw/refs/heads/main/docs/navigation-video-demo.mp4)
+
+**Date:** 12 November 2026
+
+**Result:** Target successfully localized; robot returned to the starting area.
+
+```text
+2026-11-12 20:07:21  Returned to the start area.
+TARGET REPORT: (x, y) = (1.919, -0.954) m in the map frame.
+Mission time: 87.1 s.
+```
+
+The robot detected the target, collected observations from different camera viewpoints and estimated its position through triangulation. After confirming the target coordinates, it autonomously returned to the starting area.
+
+## Actual assessment results
+
+**Date:** 13 November 2026
+
+### Attempt 1 — Target localization unsuccessful
+
+**Time:** 17:19:18  
+**Mission duration:** 327.9 s  
+**Outcome:** Returned to the starting area without a confirmed target position.
+
+```text
+2026-11-13 17:19:18  Returned to the start area.
+No target was confirmed.
+Mission time: 327.9 s.
+```
+
+The robot detected the target during the search but was unable to obtain a second usable observation for triangulation. The available observation viewpoint was too constrained for reliable target reacquisition, preventing the system from estimating and reporting the target coordinates.
+
+Although target localization was unsuccessful, the robot autonomously returned to the starting area.
+
+### Attempt 2 — Navigation and return failure
+
+**Time:** 17:26:18  
+**Mission duration:** 126.8 s  
+**Outcome:** Failed to return to the starting area; no target position was confirmed.
+
+```text
+2026-11-13 17:26:18  FAILED: could not return to the start area.
+No target was confirmed.
+Mission time: 126.8 s.
+```
+
+During navigation, the robot collided with a mapped obstacle and became stuck. The navigation system was unable to recover and complete the return-to-start procedure.
+
+This failure highlights limitations in obstacle clearance and navigation recovery in confined environments. Further investigation of the A* path planner, local path-following controller and robot localization is needed to determine the exact cause.
+
+## Assessment maps
+
+The map files generated during the actual assessment are preserved in this repository as records of the tested environment.
+
+Each saved map consists of a `.yaml` metadata file and its corresponding `.pgm` occupancy-grid image.
+
+These files document the environment mapped during the assessment. They were generated on-site and were not preloaded or used as a substitute for the required mapping procedure.
