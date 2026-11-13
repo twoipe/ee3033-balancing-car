@@ -1,0 +1,8 @@
+2026-11-10 15:22:24  Returned to the start area. No target was confirmed. Mission time 127.4 s.
+2026-11-12 17:05:54  Returned to the start area. TARGET REPORT: (x, y) = (1.081, -0.487) m in the map frame. Mission time 49.1 s.
+2026-11-12 17:43:45  Returned to the start area. TARGET REPORT: (x, y) = (2.082, -1.033) m in the map frame. Mission time 118.6 s.
+2026-11-12 18:08:27  Returned to the start area. No target was confirmed. Mission time 123.7 s.
+2026-11-12 18:10:41  Returned to the start area. TARGET REPORT: (x, y) = (2.100, -1.265) m in the map frame. Mission time 101.9 s.
+2026-11-12 20:07:21  Returned to the start area. TARGET REPORT: (x, y) = (1.919, -0.954) m in the map frame. Mission time 87.1 s.
+2026-11-13 17:19:18  Returned to the start area. No target was confirmed. Mission time 327.9 s.
+2026-11-13 17:26:18  FAILED: could not return to the start area No target was confirmed. Mission time 126.8 s.
