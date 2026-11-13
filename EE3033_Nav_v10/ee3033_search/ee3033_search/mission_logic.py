@@ -27,8 +27,8 @@ DEFAULTS = {
 
     'target_class': '', 'calibration_verified': False,
     'min_confidence': 0.45, 'lost_clear_sec': 1.5, 'confirmations': 3, 'refine_sec': 2.0,
-    'image_width': 640, 'image_height': 480, 'camera_horizontal_fov_deg': 48.3,
-    'camera_yaw_offset_deg': 0.0, 'camera_frame': 'camera_link',
+    'image_width': 640, 'image_height': 480, 'camera_horizontal_fov_deg': 57.9,
+    'camera_yaw_offset_deg': -2.05, 'camera_frame': 'camera_link',
     'max_scan_age_sec': 2.0,
     'visual_min_baseline_m': 0.20, 'visual_min_cross_angle_deg': 6.0,
     'visual_max_bearing_error_deg': 3.0, 'visual_history_sec': 35.0,
@@ -41,7 +41,7 @@ DEFAULTS = {
     'viewpoint_trigger_max_bearing_deg': 12.0,
     'target_max_spread_m': 0.35, 'reject_wall_hits': True, 'wall_hit_radius_m': 0.10,
 
-    'robot_clearance_m': 0.38, 'search_spacing_m': 0.80, 'max_sites': 40,
+    'robot_clearance_m': 0.13, 'search_spacing_m': 0.30, 'max_sites': 40,
     'coverage_range_m': 2.0, 'coverage_fov_fraction': 0.8, 'min_gain_fraction': 0.12,
     'spin_step_deg': 90.0, 'max_navigation_failures': 6,
 
