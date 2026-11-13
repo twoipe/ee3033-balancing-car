@@ -126,15 +126,15 @@ def astar(blocked, start, goal, max_expansions=200000, extra=None):
 
 PARAMS = {
     'scan_topic': 'auto', 'robot_frame': 'base_footprint', 'map_frame': 'map',
-    'robot_radius': 0.095, 'safety_margin': 0.005,
+    'robot_radius': 0.07, 'safety_margin': 0.005,
     'max_linear_speed': 0.10, 'max_angular_speed': 0.35, 'spin_speed': 0.35,
-    'stop_distance': 0.40, 'front_half_angle_deg': 30.0, 'goal_tolerance': 0.15,
+    'stop_distance': 0.20, 'front_half_angle_deg': 30.0, 'goal_tolerance': 0.15,
     'obstacle_ttl': 2.0, 'max_map_cells': 600000, 'scan_timeout': 1.0,
     'goal_timeout_sec': 120.0, 'plan_fail_limit': 5, 'blocked_timeout_sec': 8.0,
     'progress_window_sec': 15.0, 'progress_min_m': 0.10,
     'endpoint_clear_m': 0.30, 'goal_snap_m': 0.30,
 
-    'slow_distance': 0.55,
+    'slow_distance': 0.45,
     'avoid_gain': 0.5,
     'reverse_speed': 0.05,
     'reverse_clear_m': 0.35,
