@@ -97,14 +97,14 @@ ros2 run tf2_ros tf2_echo base_footprint camera_link
 
 ## 5. Calibration: exact parameters and procedures
 
-Edit `~/ee3033-balancing-car/EE3033_Nav_v10/ee3033_search/config/search.yaml` for mission parameters and `~/ee3033-balancing-car/EE3033_Nav_v10/config/astar.yaml` for the Pi A* parameters. Start with the defaults. **The values below are starting settings, not verified physical measurements.** Record the old value, change only one variable at a time, repeat the same trial, and compare position error and safety behavior. Re-run `install` after edits to `search.yaml`; `astar.yaml` is transferred to the Pi when navigation starts. Restart the navigation stack after changes.
+Edit `~/ee3033-balancing-car/EE3033_Nav_v10/ee3033_search/config/search.yaml` for mission parameters and `~/ee3033-balancing-car/EE3033_Nav_v10/config/astar.yaml` for the Pi A* parameters. Start with the defaults. **The values below reflect the documented configuration. Camera calibration values are specific to the tested installation, while other parameters should be verified against the physical robot and operating environment.** Record the old value, change only one variable at a time, repeat the same trial, and compare position error and safety behavior. Re-run `install` after edits to `search.yaml`; `astar.yaml` is transferred to the Pi when navigation starts. Restart the navigation stack after changes.
 
 ### 5.1 Camera, geometry and target estimation
 
 | Parameter (default) | Significance | Specific calibration / verification instructions |
 |---|---|---|
 | `camera_frame: camera_link` | TF origin and axes for every measured ray | With the robot still, run `ros2 run tf2_ros tf2_echo base_footprint camera_link` in a sourced terminal. Check that camera position matches tape-measured offsets from the robot base and its forward axis points along the actual optical direction. Correct the **static TF in robot bringup**, not this frame name, if the physical mounting transform is wrong. Then check `map camera_link` after AMCL pose initialization. |
-| `camera_horizontal_fov_deg: 57.9` | Converts the YOLO bounding-box centre into a horizontal bearing | Keep the robot stationary and place a detectable object at four measured positions relative to the camera's optical centre: **A (1.00 m forward, 0.25 m left), B (1.00 m forward, centred), C (1.00 m forward, 0.25 m right), and D (0.70 m forward, 0.15 m left)**. For each position, record the bounding-box centre pixel `u` from `/yolo/detections` in the 640-pixel-wide image. Take three readings per position and average them. Use `bearing_calibration.py` with the four measured positions and averaged pixel values to jointly estimate the camera's horizontal FOV and yaw offset. The calibration assumes a pinhole camera model with negligible lens distortion. |
+| `camera_horizontal_fov_deg: 57.9` | Converts the YOLO bounding-box centre into a horizontal bearing | Calibrate the horizontal FOV and residual yaw offset using four measured object positions. Follow the four-point camera calibration procedure below. |
 | `camera_yaw_offset_deg: -2.05` | Residual angular correction added to camera TF yaw | Face the robot along a measured map +x line; put a target directly on the camera's forward optical axis. Its YOLO centre should be near pixel 320. Measure target positions left and right and compare computed map bearings with tape-measured `atan2(target_y-camera_y,target_x-camera_x)`. If the same signed angular error appears across positions, correct the physical TF yaw first; use this offset only for a small residual. Re-test both sides, avoiding double compensation. |
 | `image_width: 640`, `image_height: 480` | Pixel scale used for box-to-bearing conversion | Check the actual camera image dimensions and detection coordinates. If resolution changes, match both settings and recalibrate FOV. Do not tune width/height to compensate for geometric error. |
 | `visual_min_baseline_m: 0.20` | Minimum separation between observation camera positions | Mark the two physical camera positions on the floor and compare their distance with TF/AMCL displacement. Aim for at least 0.20 m **actual** separation; if a 0.40 m commanded move finishes short, first verify A* goal tolerance and AMCL accuracy. Increasing this threshold rejects weak baselines but may reduce successful fixes. |
@@ -118,6 +118,35 @@ Edit `~/ee3033-balancing-car/EE3033_Nav_v10/ee3033_search/config/search.yaml` fo
 | `confirmations: 3`, `refine_sec: 2.0` | Consecutive estimates needed, then stationary refinement wait | At a fixed object, check that confirmation is repeatable and the robot remains still for refinement. If reports are unstable, examine independent-view geometry first: successive confirmations reuse much of the same observation history. Increasing these values alone does not prove independence. |
 | `min_confidence: 0.45` | Minimum YOLO confidence accepted by the mission | Check `/yolo/detections` for the chosen class under normal arena lighting, at centre and image edges. Raise if false positives occur; lower only if true detections are consistently rejected and misclassifications remain acceptable. This is distinct from the detector's own confidence threshold. |
 | `lost_clear_sec: 1.5` | Time without a target before trigger/confirmation continuity expires | Observe target detections while stationary and during a short turn. If legitimate detections are separated by more than 1.5 s, improve YOLO throughput first; increase only enough to tolerate real gaps, since old observations may then be treated as continuous. |
+
+#### Four-point camera calibration
+
+The camera's horizontal field of view and yaw offset were calibrated using four known object positions relative to the camera:
+
+| Position | Forward distance (m) | Lateral offset (m) |
+|---|---:|---:|
+| A | 1.00 | +0.25 (left) |
+| B | 1.00 | 0.00 (centre) |
+| C | 1.00 | −0.25 (right) |
+| D | 0.70 | +0.15 (left) |
+
+With the robot stationary, the YOLO bounding-box centre was measured at each position using `/yolo/detections`. Three pixel readings were collected and averaged for each position.
+
+The measurements were supplied to `bearing_calibration.py` to estimate the camera's horizontal field of view and residual yaw offset.
+
+Use this calibration command, replacing U_A, U_B, U_C and U_D with your averaged bounding-box centre pixel readings:
+
+```bash
+python3 bearing_calibration.py \
+  --obs 1.0,0.25,U_A \
+  1.0,0.0,U_B \
+  1.0,-0.25,U_C \
+  0.7,0.15,U_D
+```
+
+The calibration uses positive lateral offsets for left and negative offsets for right, with distances measured from the camera's optical centre.
+
+The final configured values were `camera_horizontal_fov_deg: 57.9` and `camera_yaw_offset_deg: -2.05`. These values are specific to the calibrated camera installation and should be remeasured if the camera mounting changes.
 
 ### 5.2 Automatic viewpoint acquisition and coverage
 
@@ -157,8 +186,8 @@ These parameters are in `config/astar.yaml`; some A* defaults such as `soft_marg
 
 ### 5.4 Physical calibration sequence
 
-1. **Check geometry without motion.** Confirm the TF chain `map -> odom -> base_footprint -> camera_link`, the camera offset, map/scan alignment, the 640×480 image, and YOLO class. Set the pose only to the robot's measured map pose.
-2. **Calibrate bearing.** Put the object at measured offsets from the **camera**: `(forward=1.0 m, left=0)`, `(1.0 m, +0.40 m)` and `(1.0 m, -0.40 m)`. Record box centres, compute FOV and verify yaw symmetry. Repeat at another distance.
+1. **Check geometry without motion.** Confirm the TF chain `map -> odom_combined -> base_footprint -> camera_link`, the camera offset, map/scan alignment, the 640×480 image, and YOLO class. Set the pose only to the robot's measured map pose.
+2. **Calibrate camera bearing.** Keep the robot stationary and place the target at four measured positions relative to the camera: (1.00 m forward, 0.25 m left), (1.00 m forward, centred), (1.00 m forward, 0.25 m right), and (0.70 m forward, 0.15 m left). Record the YOLO bounding-box centre pixels and use `bearing_calibration.py` to jointly estimate the horizontal FOV and yaw offset, following Section 5.1.
 3. **Calibrate movement.** Test the A* 0.40 m lateral viewpoint in clear space and measure actual camera translation, stop accuracy and whether YOLO reacquires the target. Do not infer travel distance from commanded distance alone.
 4. **Supervised target-position trials.** Tape-measure the object's **map** coordinates for at least three locations, for example `(1.0, 0.0)`, `(1.0, -0.5)` and `(1.5, 0.5)` if those positions are safe and free. Run the complete mission and record each reported coordinate and Euclidean error. Repeat trials. Ten centimetres is an **internal accuracy target**, not an established assessment tolerance.
 5. **Check failure behavior.** Test no target, target loss during a viewpoint move, a blocked viewpoint, and return home. Do not treat a successful offline test as proof of physical safety.
