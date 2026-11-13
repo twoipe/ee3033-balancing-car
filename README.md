@@ -103,7 +103,7 @@ During navigation, the robot collided with a mapped obstacle and became stuck. T
 
 Another possible contributing factor was the A* planner's tendency to favour lower-cost paths, which could lead to routes close to obstacles when the clearance penalties were insufficient. Although the planner included soft obstacle costs to discourage such routes, these did not guarantee adequate physical clearance.
 
-This failure highlights limitations in obstacle clearance and navigation recovery in confined environments. Further investigation is needed to determine whether the collision resulted from insufficient clearance, localization error or path-following behaviour.
+This failure highlights limitations in obstacle clearance and navigation recovery in confined environments. Further investigation is needed to determine whether the collision resulted from insufficient planned clearance, path selection or path-following behaviour.
 
 ## Assessment maps
 
