@@ -10,6 +10,9 @@ __pycache__/
 *.zip
 preflight_out.txt
 ee3033_target_report.txt
-# Saved maps (trial maps will not be committed; maps are saved to ~/ee3033_maps on the VM; only assessment map is included)
+# Runtime-generated maps
 ee3033_maps/
 *.pgm
+
+# Preserve selected post-assessment map archives
+!docs/assessment_maps/*.pgm
